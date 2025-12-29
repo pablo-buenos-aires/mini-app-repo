@@ -44,7 +44,7 @@ const App = () => {
     return () => {
       active = false;
     };
-  }, [mergeItems]);
+  }, [mergeItems]); 
 
   useEffect(() => {
     const mainButton = getTelegramWebApp()?.MainButton;
