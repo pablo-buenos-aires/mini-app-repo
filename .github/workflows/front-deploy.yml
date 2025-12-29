@@ -1,13 +1,13 @@
 name: ci.yml
 
 permissions:
-  id-token: write   # нужно для OIDC → AWS STS
+  id-token: write    # нужно для OIDC → AWS STS
 
 on:
   push:
     branches:
       - main
-      
+
 jobs:
   deploy:
     uses: pablo-buenos-aires/workflows/.github/workflows/front-deploy-s3.yml@main
