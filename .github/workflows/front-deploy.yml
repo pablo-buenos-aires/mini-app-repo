@@ -6,9 +6,8 @@ permissions:
 on:
   push:
     branches:
-      - main 
-      # можешь доба вить dev, если надо
-
+      - main
+      
 jobs:
   deploy:
     uses: pablo-buenos-aires/workflows/.github/workflows/front-deploy-s3.yml@main
