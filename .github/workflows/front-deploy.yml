@@ -1,0 +1,21 @@
+name: ci.yml
+
+permissions:
+  id-token: write   # нужно для OIDC → AWS STS
+
+on:
+  push:
+    branches:
+      - main 
+      # можешь доба вить dev, если надо
+
+jobs:
+  deploy:
+    uses: pablo-buenos-aires/workflows/.github/workflows/front-deploy-s3.yml@main
+    with:
+      s3_bucket: ${{ vars.S3_BUCKET_NAME }}
+      cloudfront_distribution_id: ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}   # или '' если нет CF
+      node_version: '20'
+      build_command: 'npm run build'             # если у тебя другая команда
+      build_dir: 'dist'                          # если Vite билдит в другое место
+
