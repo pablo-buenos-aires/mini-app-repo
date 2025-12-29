@@ -1,6 +1,7 @@
 import { FormEvent, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { createOrder } from '../api/orders';
+import { formatMoney } from '../lib/money';
 import useCartStore from '../store/cart';
 
 const CheckoutPage = () => {
@@ -37,48 +38,47 @@ const CheckoutPage = () => {
   };
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Checkout</h2>
-        <Link className="link" to="/cart">Back to cart</Link>
+        <h2 className="section-title">Оформление</h2>
       </div>
 
       {items.length === 0 ? (
-        <div className="card empty">Cart is empty. Add items before checkout.</div>
+        <div className="card empty">Корзина пустая. Добавьте товары.</div>
       ) : (
         <form className="card stack" onSubmit={handleSubmit}>
           <label>
-            Phone
+            Телефон
             <input
               type="tel"
-              placeholder="+1 555 0123"
+              placeholder="+7 900 000 00 00"
               value={phone}
               onChange={(event) => setPhone(event.target.value)}
             />
           </label>
           <label>
-            Delivery address
+            Адрес доставки
             <input
               type="text"
-              placeholder="Street, building, apt"
+              placeholder="Улица, дом, квартира"
               value={address}
               onChange={(event) => setAddress(event.target.value)}
             />
           </label>
           <label>
-            Comment
+            Комментарий
             <textarea
               rows={3}
-              placeholder="Any special notes?"
+              placeholder="Комментарий к заказу"
               value={comment}
               onChange={(event) => setComment(event.target.value)}
             />
           </label>
           {error ? <div className="pill">{error}</div> : null}
           <div className="row">
-            <strong>Total ${(totalCents / 100).toFixed(2)}</strong>
+            <strong>{formatMoney(totalCents, 'ARS')}</strong>
             <button className="btn" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : 'Confirm order'}
+              {isSubmitting ? 'Отправка...' : 'Подтвердить'}
             </button>
           </div>
         </form>

@@ -2,22 +2,22 @@ import { Link } from 'react-router-dom';
 
 const AdminPage = () => {
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Admin</h2>
+        <h2 className="section-title">Админ</h2>
       </div>
       <div className="stack">
-        <Link className="card" to="/admin/orders">
-          Manage orders
+        <Link className="card card-body" to="/admin/orders">
+          Управление заказами
         </Link>
-        <Link className="card" to="/admin/customers">
-          View customers
+        <Link className="card card-body" to="/admin/customers">
+          Клиенты
         </Link>
-        <Link className="card" to="/admin/categories">
-          Manage categories
+        <Link className="card card-body" to="/admin/categories">
+          Категории
         </Link>
-        <Link className="card" to="/admin/products">
-          Manage products
+        <Link className="card card-body" to="/admin/products">
+          Товары
         </Link>
       </div>
     </section>

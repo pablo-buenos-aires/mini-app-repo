@@ -1,11 +1,16 @@
+import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { fetchProduct } from '../api/products';
+import ProductCard from '../components/ProductCard';
 import useCartStore from '../store/cart';
 
 const ProductPage = () => {
   const params = useParams();
+  const items = useCartStore((state) => state.items);
   const addItem = useCartStore((state) => state.addItem);
+  const increment = useCartStore((state) => state.increment);
+  const decrement = useCartStore((state) => state.decrement);
 
   const productId = Number(params.id);
   const isValidId = Number.isFinite(productId) && productId > 0;
@@ -19,45 +24,43 @@ const ProductPage = () => {
     enabled: isValidId
   });
 
-  const handleAdd = () => {
+  const qty = useMemo(() => {
     if (!product) {
-      return;
+      return 0;
     }
-    addItem({
-      product_id: product.id,
-      title: product.title,
-      price_cents: product.price_cents
-    }, 1);
-  };
+    const match = items.find((item) => item.product_id === product.id);
+    return match?.qty ?? 0;
+  }, [items, product]);
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>{product?.title ?? 'Product'}</h2>
-        <Link className="link" to="/cart">Go to cart</Link>
+        <h2 className="section-title">{product?.title ?? 'Товар'}</h2>
       </div>
 
       {!isValidId ? (
-        <div className="card empty">Invalid product.</div>
+        <div className="card empty">Некорректный товар.</div>
       ) : isLoading ? (
-        <div className="card empty">Loading product...</div>
+        <div className="card empty">Загружаем товар...</div>
       ) : isError || !product ? (
-        <div className="card empty">Failed to load product.</div>
+        <div className="card empty">Не удалось загрузить товар.</div>
       ) : (
-        <div className="card detail">
-          <p>{product.description ?? 'No description yet.'}</p>
-          <div className="row">
-            <span className="price">${(product.price_cents / 100).toFixed(2)}</span>
-            <button
-              className="btn"
-              type="button"
-              onClick={handleAdd}
-              disabled={!product.active}
-            >
-              {product.active ? 'Add to cart' : 'Unavailable'}
-            </button>
-          </div>
-        </div>
+        <ProductCard
+          product={product}
+          qty={qty}
+          onAdd={() =>
+            addItem(
+              {
+                product_id: product.id,
+                title: product.title,
+                price_cents: product.price_cents
+              },
+              1
+            )
+          }
+          onIncrement={() => increment(product.id)}
+          onDecrement={() => decrement(product.id)}
+        />
       )}
     </section>
   );

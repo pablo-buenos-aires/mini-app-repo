@@ -1,14 +1,14 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 
 const NotFoundPage = () => {
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Page not found</h2>
+        <h2 className="section-title">Страница не найдена</h2>
       </div>
       <div className="card empty">
-        <p>We could not find that route.</p>
-        <Link className="link" to="/">Go back home</Link>
+        <p>Такой страницы нет.</p>
+        <Link className="link" to="/">На главную</Link>
       </div>
     </section>
   );

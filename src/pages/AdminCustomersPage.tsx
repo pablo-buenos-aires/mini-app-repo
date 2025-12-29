@@ -31,16 +31,16 @@ const AdminCustomersPage = () => {
   }, []);
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Admin Customers</h2>
+        <h2 className="section-title">Админ: Клиенты</h2>
       </div>
       {isLoading ? (
-        <div className="card empty">Loading customers...</div>
+        <div className="card empty">Загружаем клиентов...</div>
       ) : error ? (
         <div className="card empty">{error}</div>
       ) : customers.length === 0 ? (
-        <div className="card empty">No customers found.</div>
+        <div className="card empty">Клиенты не найдены.</div>
       ) : (
         <div className="card">
           <table>
@@ -48,9 +48,9 @@ const AdminCustomersPage = () => {
               <tr>
                 <th>User ID</th>
                 <th>Username</th>
-                <th>Name</th>
-                <th>Last seen</th>
-                <th>Orders</th>
+                <th>Имя</th>
+                <th>Последний визит</th>
+                <th>Заказы</th>
               </tr>
             </thead>
             <tbody>

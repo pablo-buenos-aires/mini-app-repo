@@ -99,12 +99,12 @@ const AdminCategoriesPage = () => {
   };
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Admin Categories</h2>
+        <h2 className="section-title">Админ: Категории</h2>
       </div>
-      <div className="card stack">
-        <h3>Create category</h3>
+      <div className="card card-body stack">
+        <h3>Новая категория</h3>
         <div className="row">
           <input
             type="text"
@@ -119,15 +119,15 @@ const AdminCategoriesPage = () => {
             onChange={(event) => setSort(event.target.value)}
           />
           <button className="btn" type="button" onClick={handleCreate}>
-            Add
+            Добавить
           </button>
         </div>
         {error ? <div className="pill">{error}</div> : null}
       </div>
       {isLoading ? (
-        <div className="card empty">Loading categories...</div>
+        <div className="card empty">Загружаем категории...</div>
       ) : categories.length === 0 ? (
-        <div className="card empty">No categories yet.</div>
+        <div className="card empty">Категорий пока нет.</div>
       ) : (
         <div className="card">
           <table>
@@ -178,10 +178,10 @@ const AdminCategoriesPage = () => {
                     <td>
                       <div className="row">
                         <button className="btn ghost" type="button" onClick={() => handleUpdate(category.id)}>
-                          Save
+                          Сохранить
                         </button>
                         <button className="btn ghost" type="button" onClick={() => handleDelete(category.id)}>
-                          Delete
+                          Удалить
                         </button>
                       </div>
                     </td>

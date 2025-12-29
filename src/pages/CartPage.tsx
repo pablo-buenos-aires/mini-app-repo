@@ -1,5 +1,7 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import QtyControl from '../components/QtyControl';
+import { formatMoney } from '../lib/money';
 import { getTelegramWebApp } from '../lib/telegram';
 import useCartStore from '../store/cart';
 
@@ -9,48 +11,38 @@ const CartPage = () => {
   const totalCents = useCartStore((state) => state.totalCents());
   const increment = useCartStore((state) => state.increment);
   const decrement = useCartStore((state) => state.decrement);
-  const removeItem = useCartStore((state) => state.removeItem);
   const clear = useCartStore((state) => state.clear);
   const showWebCheckout = useMemo(() => !getTelegramWebApp(), []);
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Your cart</h2>
-        <button className="link" type="button" onClick={clear}>
-          Clear
+        <h2 className="section-title">Корзина</h2>
+        <button className="btn ghost" type="button" onClick={clear}>
+          Очистить
         </button>
       </div>
 
       {items.length === 0 ? (
-        <div className="card empty">Cart is empty.</div>
+        <div className="card empty">Корзина пустая.</div>
       ) : (
         <div className="stack">
           {items.map((item) => (
-            <div key={item.product_id} className="card row">
-              <div>
+            <div key={item.product_id} className="card cart-item">
+              <div className="cart-meta">
                 <h3>{item.title}</h3>
-                <p>
-                  ${(item.price_cents / 100).toFixed(2)} x {item.qty}
-                </p>
-                <small>${(item.subtotal_cents / 100).toFixed(2)}</small>
+                <p>{formatMoney(item.price_cents, 'ARS')} · {item.qty} шт.</p>
               </div>
-              <div className="row">
-                <button className="btn ghost" type="button" onClick={() => decrement(item.product_id)}>
-                  -
-                </button>
-                <button className="btn ghost" type="button" onClick={() => increment(item.product_id)}>
-                  +
-                </button>
-                <button className="btn ghost" type="button" onClick={() => removeItem(item.product_id)}>
-                  Remove
-                </button>
-              </div>
+              <QtyControl
+                qty={item.qty}
+                onIncrement={() => increment(item.product_id)}
+                onDecrement={() => decrement(item.product_id)}
+              />
             </div>
           ))}
-          <div className="card total">
-            <span>Total</span>
-            <strong>${(totalCents / 100).toFixed(2)}</strong>
+          <div className="card cart-summary">
+            <span>Итого</span>
+            <strong>{formatMoney(totalCents, 'ARS')}</strong>
           </div>
           {showWebCheckout ? (
             <div className="row">

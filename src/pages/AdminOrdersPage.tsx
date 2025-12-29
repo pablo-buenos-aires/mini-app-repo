@@ -1,7 +1,6 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { fetchAdminOrders, type Order } from '../api/orders';
-
-const formatMoney = (cents: number) => `$${(cents / 100).toFixed(2)}`;
+import { formatMoney } from '../lib/money';
 
 const AdminOrdersPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -38,9 +37,9 @@ const AdminOrdersPage = () => {
   };
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Admin Orders</h2>
+        <h2 className="section-title">Админ: Заказы</h2>
       </div>
       <form className="card row" onSubmit={handleSubmit}>
         <input
@@ -64,23 +63,23 @@ const AdminOrdersPage = () => {
         <button className="btn" type="submit">Filter</button>
       </form>
       {isLoading ? (
-        <div className="card empty">Loading orders...</div>
+        <div className="card empty">Загружаем заказы...</div>
       ) : error ? (
         <div className="card empty">{error}</div>
       ) : orders.length === 0 ? (
-        <div className="card empty">No orders found.</div>
+        <div className="card empty">Заказы не найдены.</div>
       ) : (
         <div className="stack">
           {orders.map((order) => (
             <div key={order.id} className="card">
               <div className="row">
                 <div>
-                  <h3>Order #{order.id}</h3>
+                  <h3>Заказ #{order.id}</h3>
                   <p>User: {order.user_id}</p>
-                  <p>Status: {order.status}</p>
+                  <p>Статус: {order.status}</p>
                   <p>{new Date(order.created_at).toLocaleString()}</p>
                 </div>
-                <strong>{formatMoney(order.total_cents)}</strong>
+                <strong>{formatMoney(order.total_cents, order.currency)}</strong>
               </div>
               <div className="stack">
                 {order.items.map((item) => (
@@ -88,7 +87,7 @@ const AdminOrdersPage = () => {
                     <span>
                       {item.title} x {item.qty}
                     </span>
-                    <span>{formatMoney(item.subtotal_cents)}</span>
+                    <span>{formatMoney(item.subtotal_cents, order.currency)}</span>
                   </div>
                 ))}
               </div>

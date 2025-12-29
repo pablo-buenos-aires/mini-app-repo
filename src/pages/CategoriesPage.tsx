@@ -1,15 +1,12 @@
-import { useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { fetchCategories } from '../api/categories';
-import { fetchHealth } from '../api/health';
 import { fetchProducts } from '../api/products';
+import CategoryGrid from '../components/CategoryGrid';
+import SearchBar from '../components/SearchBar';
 
 const CategoriesPage = () => {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['health'],
-    queryFn: fetchHealth
-  });
+  const [query, setQuery] = useState('');
   const {
     data: categories = [],
     isLoading: categoriesLoading,
@@ -18,13 +15,18 @@ const CategoriesPage = () => {
     queryKey: ['categories'],
     queryFn: fetchCategories
   });
-  const {
-    data: products = [],
-    isLoading: productsLoading
-  } = useQuery({
+  const { data: products = [] } = useQuery({
     queryKey: ['products'],
     queryFn: () => fetchProducts()
   });
+
+  const filteredCategories = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    if (!needle) {
+      return categories;
+    }
+    return categories.filter((category) => category.name.toLowerCase().includes(needle));
+  }, [categories, query]);
 
   const countByCategory = useMemo(() => {
     const map = new Map<number, number>();
@@ -39,34 +41,24 @@ const CategoriesPage = () => {
   }, [products]);
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Categories</h2>
-        <span className="pill">
-          API: {isLoading ? 'checking' : isError ? 'down' : data?.status}
-        </span>
+        <h2 className="section-title">Категории</h2>
       </div>
+      <SearchBar value={query} onChange={setQuery} placeholder="Поиск категорий" />
 
-      <div className="grid">
-        {categoriesLoading ? (
-          <div className="card empty">Loading categories...</div>
-        ) : categoriesError ? (
-          <div className="card empty">Failed to load categories.</div>
-        ) : categories.length === 0 ? (
-          <div className="card empty">No categories yet.</div>
-        ) : (
-          categories.map((category) => {
-            const count = countByCategory.get(category.id) ?? 0;
-            const countLabel = productsLoading ? '...' : `${count}`;
-            return (
-              <Link key={category.id} className="card" to={`/category/${category.id}`}>
-                <h3>{category.name}</h3>
-                <p>{countLabel} items</p>
-              </Link>
-            );
-          })
-        )}
-      </div>
+      {categoriesLoading ? (
+        <div className="card empty">Загружаем категории...</div>
+      ) : categoriesError ? (
+        <div className="card empty">Не удалось загрузить категории.</div>
+      ) : filteredCategories.length === 0 ? (
+        <div className="card empty">Ничего не найдено.</div>
+      ) : (
+        <CategoryGrid
+          categories={filteredCategories}
+          counts={countByCategory}
+        />
+      )}
     </section>
   );
 };

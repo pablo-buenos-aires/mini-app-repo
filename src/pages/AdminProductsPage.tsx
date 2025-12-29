@@ -191,12 +191,12 @@ const AdminProductsPage = () => {
   ));
 
   return (
-    <section>
+    <section className="section">
       <div className="section-head">
-        <h2>Admin Products</h2>
+        <h2 className="section-title">Админ: Товары</h2>
       </div>
-      <div className="card stack">
-        <h3>Create product</h3>
+      <div className="card card-body stack">
+        <h3>Новый товар</h3>
         <div className="grid">
           <input
             type="text"
@@ -252,15 +252,15 @@ const AdminProductsPage = () => {
           />
         </div>
         <button className="btn" type="button" onClick={handleCreate}>
-          Add product
+          Добавить товар
         </button>
         {error ? <div className="pill">{error}</div> : null}
-        {s3Disabled ? <div className="pill">S3 disabled</div> : null}
+        {s3Disabled ? <div className="pill">S3 отключен</div> : null}
       </div>
       {isLoading ? (
-        <div className="card empty">Loading products...</div>
+        <div className="card empty">Загружаем товары...</div>
       ) : products.length === 0 ? (
-        <div className="card empty">No products yet.</div>
+        <div className="card empty">Товаров пока нет.</div>
       ) : (
         <div className="stack">
           {products.map((product) => {
@@ -385,7 +385,7 @@ const AdminProductsPage = () => {
                 <div className="row">
                   <div className="row">
                     <label className="btn ghost">
-                      {uploadingId === product.id ? 'Uploading...' : 'Upload photo'}
+                      {uploadingId === product.id ? 'Загрузка...' : 'Загрузить фото'}
                       <input
                         type="file"
                         accept="image/*"
@@ -395,10 +395,10 @@ const AdminProductsPage = () => {
                       />
                     </label>
                     <button className="btn ghost" type="button" onClick={() => handleUpdate(product.id)}>
-                      Save
+                      Сохранить
                     </button>
                   </div>
-                  <span>Updated {new Date(product.updated_at).toLocaleDateString()}</span>
+                  <span>Обновлено {new Date(product.updated_at).toLocaleDateString()}</span>
                 </div>
               </div>
             );
