@@ -34,7 +34,7 @@ const resolveTitle = (pathname: string) => {
   if (pathname.startsWith('/admin')) {
     return 'Админ';
   }
-  return 'Mushroom Shop';
+  return 'Healthy Shop';
 };
 
 const TopBar = () => {
